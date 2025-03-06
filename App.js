@@ -52,9 +52,9 @@ class App extends Component {
           style = {{width:300 , height:300, borderRadius: 8}}          
           />
 
-        <Text style = {{color:'#000000', backgroundColor:'#87CEFA', borderRadius: 20}}>VW - Fusca</Text>
-        <Text style = {{color:'#000000', backgroundColor:'#87CEFA', borderRadius: 50}}>Ano - 1978</Text>
-        <Text style = {{color:'#000000', backgroundColor:'#87CEFA', borderRadius: 50}}>Cor - Preto</Text>
+        <Text style = {{color:'#000000', backgroundColor:'#87CEFA', borderRadius: 20}}>VW - Gol</Text>
+        <Text style = {{color:'#000000', backgroundColor:'#87CEFA', borderRadius: 50}}>Ano - 2010</Text>
+        <Text style = {{color:'#000000', backgroundColor:'#87CEFA', borderRadius: 50}}>Cor - Cinza</Text>
         
         </View>
 
