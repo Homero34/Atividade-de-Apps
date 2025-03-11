@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
 
-import FuscaIMG from "App_Android/Atividade-de-Apps/assets/Fusca.jpeg"
-import MustangIMG from "App_Android/Atividade-de-Apps/assets/Mustang.jpeg"
+import FuscaIMG from "./assets/Fusca.png"
+import MustangIMG from "./assets/Mustang.png"
 
 
 class App extends Component {
@@ -19,11 +19,11 @@ class App extends Component {
       },
       card: {
 
-      position: 'relative',
+      position: "static",
       borderRadius: 8,
       backgroundColor: '#fff',
       marginBottom: 16,
-      shadowColor: 'rgba(0, 0, 0, 0.5)',
+      shadowColor: 'rgba(0, 0, 0, 1.5)',
       shadowOffset: {
       width: 0,
       height: 1,
@@ -33,11 +33,18 @@ class App extends Component {
       elevation: 2
       },
       cardImg: {
-        width: '100%',
+        width: '20%',
         height: 160,
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
       },
+      title: {
+        fontSize: 22,
+        fontFamily: "BebasNeue-Regular",
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 20,
+      }
 
     })
 
@@ -50,32 +57,39 @@ class App extends Component {
         name: "Fusca",
         Ano: "1930",
         Cor: "Amarelo",
-        imagem: FuscaIMG
+        image: FuscaIMG,
       },
       {
         id : "2",
         name: "Mustang",
         Ano: "1964",
         Cor: "Preto",
-        imagem: MustangIMG
+        image: MustangIMG,
       }
 
 
 
-    ]
+    ];
 
     return(
 
 
 
         <View style = {styles.container}>
-          <Text>Aplicacao inicial</Text>
+          <Text style={styles.title}>Aplicacao inicial</Text>
             <FlatList
           data={carros}
           keyExtractor={(item) => item.id}
           renderItem={({item}) => (
-           <View style = {styles.card}/>
-           
+          <View style = {styles.card}>
+           <Image source={item.image} style={styles.cardImg}/>
+           <View style={styles.info}>
+              <Text style={styles.carName}>{item.name}</Text>
+              <Text style={styles.batata}>Ano: {item.Ano}</Text>
+              <Text style={styles.batata}>Cor: {item.Cor}</Text>
+              <Text>assdad</Text>
+           </View>
+          </View>
 
 
 
@@ -83,16 +97,6 @@ class App extends Component {
 
           ) }
         />
-          
-          
-          
-          
-          
-          
-          
-          
-        
-        
         </View>
         
 
