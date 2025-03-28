@@ -1,128 +1,120 @@
-import React, { Component } from "react";
-import { View, Text, StyleSheet, Switch} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import Slider from '@react-native-community/slider';
+import React, { useState } from "react";
+import { View, Text, TextInput, Switch, Button, Image, Slider, StyleSheet, ScrollView } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          valorslider: 70,
-          status: false,
-         pizza: 0,
-         pizzas: [
-            {key: 1, nome: 'Calabresa', valor: 50.00},
-            {key: 1, nome: 'Peperoni', valor: 100.00},
-            {key: 1, nome: 'Cachorro-Quente', valor: 150.00},
-            {key: 1, nome: 'Peito de Peru', valor: 120},
-            {key: 1, nome: 'Portuguesa', valor: 130.00},
-            {key: 1, nome: 'Frango', valor: 100.},
-         ]
-         
-        };
-    };
+export default function App() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState("politica");
+  const [author, setAuthor] = useState("jornalista1");
+  const [fontSize, setFontSize] = useState(16);
+  const [brightness, setBrightness] = useState(50);
+  const [darkMode, setDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState(false);
 
-  render() {
+  const handlePublish = () => alert("Notícia Publicada!");
+  const handleClear = () => {
+    setTitle("");
+    setContent("");
+  };
 
-    const styles = StyleSheet.create({
+  return (
+    <ScrollView style={[styles.container, darkMode && styles.darkBackground]}>
+      <Text style={[styles.title, { fontSize: fontSize }]}>Jornal Digital</Text>
 
-      container: {
-        flex: 1 ,
-        fontSize: 20 ,
-        color: "#000000"
-        
-      },
-      card: {
+      {/* Campos de Texto */}
+      <Text style={styles.label}>Título da Notícia:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite o título da notícia..."
+        value={title}
+        onChangeText={setTitle}
+      />
 
-      position: "static",
-      borderRadius: 8,
-      backgroundColor: '#fff',
-      marginBottom: 16,
-      shadowColor: 'rgba(0, 0, 0, 1.5)',
-      shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-      shadowOpacity: 0.2,
-      shadowRadius: 1.41,
-      elevation: 2
-      },
-      cardImg: {
-        width: '20%',
-        height: 160,
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-      },
-      title: {
-        fontSize: 22,
-        fontFamily: "BebasNeue-Regular",
-        fontWeight: "bold",
-        textAlign: "center",
-        marginBottom: 20,
-      }
+      <Text style={styles.label}>Conteúdo:</Text>
+      <TextInput
+        style={[styles.input, styles.textArea]}
+        placeholder="Escreva a notícia aqui..."
+        multiline
+        numberOfLines={5}
+        value={content}
+        onChangeText={setContent}
+      />
 
-    })
+      {/* Pickers */}
+      <Text style={styles.label}>Categoria:</Text>
+      <Picker selectedValue={category} onValueChange={setCategory} style={styles.picker}>
+        <Picker.Item label="Política" value="politica" />
+        <Picker.Item label="Esportes" value="esportes" />
+        <Picker.Item label="Entretenimento" value="entretenimento" />
+        <Picker.Item label="Tecnologia" value="tecnologia" />
+      </Picker>
 
+      <Text style={styles.label}>Autor:</Text>
+      <Picker selectedValue={author} onValueChange={setAuthor} style={styles.picker}>
+        <Picker.Item label="Jornalista 1" value="jornalista1" />
+        <Picker.Item label="Jornalista 2" value="jornalista2" />
+        <Picker.Item label="Jornalista 3" value="jornalista3" />
+      </Picker>
 
+      {/* Sliders */}
+      <Text style={styles.label}>Tamanho da Fonte: {fontSize.toFixed(0)}</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={12}
+        maximumValue={24}
+        value={fontSize}
+        onValueChange={setFontSize}
+      />
 
-    const  carros = [
+      <Text style={styles.label}>Brilho da Página: {brightness.toFixed(0)}%</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={10}
+        maximumValue={100}
+        value={brightness}
+        onValueChange={setBrightness}
+      />
 
-      {
-        id: "1" ,
-        name: "Fusca",
-        Ano: "1930",
-        Cor: "Amarelo",
-        image: FuscaIMG,
-      },
-      {
-        id : "2",
-        name: "Mustang",
-        Ano: "1964",
-        Cor: "Preto",
-        image: MustangIMG,
-      }
+      {/* Switches */}
+      <View style={styles.switchContainer}>
+        <Text>Modo Escuro</Text>
+        <Switch value={darkMode} onValueChange={setDarkMode} />
+      </View>
 
+      <View style={styles.switchContainer}>
+        <Text>Notificações</Text>
+        <Switch value={notifications} onValueChange={setNotifications} />
+      </View>
 
+      {/* Botões */}
+      <Button title="Publicar Notícia" onPress={handlePublish} />
+      <Button title="Limpar" onPress={handleClear} color="red" />
 
-    ];
-
-    return(
-
-
-
-        <View style = {styles.container}>
-          <Text style={styles.title}>Aplicacao inicial</Text>
-            <FlatList
-          data={carros}
-          keyExtractor={(item) => item.id}
-          renderItem={({item}) => (
-          <View style = {styles.card}>
-           <Image source={item.image} style={styles.cardImg}/>
-           <View style={styles.info}>
-              <Text style={styles.carName}>{item.name}</Text>
-              <Text style={styles.batata}>Ano: {item.Ano}</Text>
-              <Text style={styles.batata}>Cor: {item.Cor}</Text>
-              <Text>assdad</Text>
-           </View>
-          </View>
-
-
-
-
-
-          ) }
-        />
-        </View>
-        
-
-  
-    )
-    
-
-
-  }
-
-
+      {/* Imagens */}
+      <Text style={styles.label}>Últimas Notícias:</Text>
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: "https://images.pexels.com/photos/3363111/pexels-photo-3363111.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
+        <Image source={{ uri: "https://images.pexels.com/photos/606541/pexels-photo-606541.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
+        <Image source={{ uri: "https://images.pexels.com/photos/45718/pexels-photo-45718.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
+        <Image source={{ uri: "https://images.pexels.com/photos/4068029/pexels-photo-4068029.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
+        <Image source={{ uri: "https://images.pexels.com/photos/1684877/pexels-photo-1684877.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
+      </View>
+    </ScrollView>
+  );
 }
 
-export default App;
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
+  darkBackground: { backgroundColor: "#333" },
+  title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 10 },
+  label: { fontSize: 16, fontWeight: "bold", marginTop: 10 },
+  input: { width: "100%", height: 40, borderWidth: 1, marginVertical: 5, paddingLeft: 10, backgroundColor: "#fff" },
+  textArea: { height: 100, textAlignVertical: "top" },
+  picker: { height: 40, width: "100%", marginVertical: 5 },
+  slider: { width: "100%", marginVertical: 10 },
+  switchContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 5 },
+  imageContainer: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", marginTop: 10 },
+  image: { width: 150, height: 100, margin: 5 },
+});
+
