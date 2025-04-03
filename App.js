@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Switch, Button, Image,StyleSheet, ScrollView } from "react-native";
+import { View, Text, TextInput, Switch, Button, Image, StyleSheet, ScrollView, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Slider from '@react-native-community/slider';
 
@@ -13,11 +13,36 @@ export default function App() {
   const [brightness, setBrightness] = useState(50);
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(false);
+  const [image, setImage] = useState(null);
+  const [publishedNews, setPublishedNews] = useState(null);
 
-  const handlePublish = () => alert("Notícia Publicada!");
+  const handlePublish = () => {
+    if (title.trim() === "" || content.trim() === "") {
+      Alert.alert("Erro", "Preencha todos os campos obrigatórios antes de publicar.");
+      return;
+    }
+    setPublishedNews({ title, content, category, author, image });
+    Alert.alert("Sucesso", "Notícia Publicada!");
+  };
+
   const handleClear = () => {
     setTitle("");
     setContent("");
+    setImage(null);
+    setPublishedNews(null);
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
   };
 
   return (
@@ -26,22 +51,10 @@ export default function App() {
 
       {/* Campos de Texto */}
       <Text style={styles.label}>Título da Notícia:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite o título da notícia..."
-        value={title}
-        onChangeText={setTitle}
-      />
+      <TextInput style={styles.input} placeholder="Digite o título da notícia..." value={title} onChangeText={setTitle} />
 
       <Text style={styles.label}>Conteúdo:</Text>
-      <TextInput
-        style={[styles.input, styles.textArea]}
-        placeholder="Escreva a notícia aqui..."
-        multiline
-        numberOfLines={5}
-        value={content}
-        onChangeText={setContent}
-      />
+      <TextInput style={[styles.input, styles.textArea]} placeholder="Escreva a notícia aqui..." multiline numberOfLines={5} value={content} onChangeText={setContent} />
 
       {/* Pickers */}
       <Text style={styles.label}>Categoria:</Text>
@@ -61,22 +74,10 @@ export default function App() {
 
       {/* Sliders */}
       <Text style={styles.label}>Tamanho da Fonte: {fontSize.toFixed(0)}</Text>
-      <Slider
-        style={styles.slider}
-        minimumValue={12}
-        maximumValue={24}
-        value={fontSize}
-        onValueChange={setFontSize}
-      />
+      <Slider style={styles.slider} minimumValue={12} maximumValue={24} value={fontSize} onValueChange={setFontSize} />
 
       <Text style={styles.label}>Brilho da Página: {brightness.toFixed(0)}%</Text>
-      <Slider
-        style={styles.slider}
-        minimumValue={10}
-        maximumValue={100}
-        value={brightness}
-        onValueChange={setBrightness}
-      />
+      <Slider style={styles.slider} minimumValue={10} maximumValue={100} value={brightness} onValueChange={setBrightness} />
 
       {/* Switches */}
       <View style={styles.switchContainer}>
@@ -89,19 +90,24 @@ export default function App() {
         <Switch value={notifications} onValueChange={setNotifications} />
       </View>
 
+      {/* Input de Imagem */}
+      <Button title="Adicionar Imagem" onPress={pickImage} />
+      {image && <Image source={{ uri: image }} style={styles.image} />}
+
       {/* Botões */}
       <Button title="Publicar Notícia" onPress={handlePublish} />
       <Button title="Limpar" onPress={handleClear} color="red" />
 
-      {/* Imagens */}
-      <Text style={styles.label}>Últimas Notícias:</Text>
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: "https://images.pexels.com/photos/3363111/pexels-photo-3363111.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
-        <Image source={{ uri: "https://images.pexels.com/photos/606541/pexels-photo-606541.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
-        <Image source={{ uri: "https://images.pexels.com/photos/45718/pexels-photo-45718.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
-        <Image source={{ uri: "https://images.pexels.com/photos/4068029/pexels-photo-4068029.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
-        <Image source={{ uri: "https://images.pexels.com/photos/1684877/pexels-photo-1684877.jpeg?auto=compress&cs=tinysrgb&w=600" }} style={styles.image} />
-      </View>
+      {/* Exibição da Notícia Publicada */}
+      {publishedNews && (
+        <View style={styles.publishedNews}>
+          <Text style={styles.publishedTitle}>{publishedNews.title}</Text>
+          <Text style={styles.publishedContent}>{publishedNews.content}</Text>
+          <Text>Categoria: {publishedNews.category}</Text>
+          <Text>Autor: {publishedNews.author}</Text>
+          {publishedNews.image && <Image source={{ uri: publishedNews.image }} style={styles.image} />}
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -116,6 +122,8 @@ const styles = StyleSheet.create({
   picker: { height: 40, width: "100%", marginVertical: 5 },
   slider: { width: "100%", marginVertical: 10 },
   switchContainer: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 5 },
-  imageContainer: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", marginTop: 10 },
-  image: { width: 150, height: 100, margin: 5 },
+  image: { width: 200, height: 150, margin: 10, alignSelf: "center" },
+  publishedNews: { marginTop: 20, padding: 10, backgroundColor: "#f5f5f5", borderRadius: 5 },
+  publishedTitle: { fontSize: 20, fontWeight: "bold" },
+  publishedContent: { fontSize: 16, marginVertical: 5 },
 });
